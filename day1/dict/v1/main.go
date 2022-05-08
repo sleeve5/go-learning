@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
 type DictRequest struct {
@@ -57,7 +58,10 @@ example: go run main.go good
 		os.Exit(1)
 	}
 	word := os.Args[1]
+	tik := time.Now()
 	query(word)
+	tok := time.Since(tik)
+	fmt.Println("用时:", tok)
 }
 
 func query(word string) {
