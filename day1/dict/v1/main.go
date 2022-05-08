@@ -40,7 +40,7 @@ func query(word string) {
 
 	// 创建HTTP请求，为POST请求
 	var data = bytes.NewReader(buf)
-	req, err := http.NewRequest("POST", "https://api.interpreter.caiyunai.com/v1/dict", data)
+	req, err := http.NewRequest("POST", "https://api.interpreter.caiyunai.com/v2/dict", data)
 	if err != nil {
 		log.Fatal(err)
 	}

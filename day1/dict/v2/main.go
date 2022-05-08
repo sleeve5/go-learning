@@ -60,7 +60,7 @@ func queryCaiyun(word string) {
 		log.Fatal(err)
 	}
 	var data = bytes.NewReader(buf)
-	req, err := http.NewRequest("POST", "https://api.interpreter.caiyunai.com/v1/dict", data)
+	req, err := http.NewRequest("POST", "https://api.interpreter.caiyunai.com/v2/dict", data)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -109,7 +109,7 @@ func queryHuoshan(word string) {
 	}
 	var data = bytes.NewReader(buf)
 
-	req, err := http.NewRequest("POST", "https://translate.volcengine.com/web/dict/match/v1/?msToken=&X-Bogus=DFSzswVLQDc7EiQrSW0Wk2UClLHg&_signature=_02B4Z6wo00001QX9qMQAAIDALnfzARghKFkF.axAACMLLr9Y.U-vgGXmkokwsubIjGF1lGEYJ7L8p5wR1vTd0cq.WWjc32r53a7oWjceMyfOAt5eJEjlbN5yVADvEZX5BoPWdLoxwADozjJr49", data)
+	req, err := http.NewRequest("POST", "https://translate.volcengine.com/web/dict/match/v2/?msToken=&X-Bogus=DFSzswVLQDc7EiQrSW0Wk2UClLHg&_signature=_02B4Z6wo00001QX9qMQAAIDALnfzARghKFkF.axAACMLLr9Y.U-vgGXmkokwsubIjGF1lGEYJ7L8p5wR1vTd0cq.WWjc32r53a7oWjceMyfOAt5eJEjlbN5yVADvEZX5BoPWdLoxwADozjJr49", data)
 	if err != nil {
 		log.Fatal(err)
 	}
