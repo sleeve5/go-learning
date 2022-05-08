@@ -53,8 +53,6 @@ type DictRespHuoshan struct {
 
 // 彩云翻译
 func queryCaiyun(word string) {
-
-	// 创建HTTP client和body流
 	client := &http.Client{}
 	request := DictReqCaiyun{TransType: "en2zh", Source: word}
 	buf, err := json.Marshal(request)
@@ -62,14 +60,10 @@ func queryCaiyun(word string) {
 		log.Fatal(err)
 	}
 	var data = bytes.NewReader(buf)
-
-	// 创建HTTP请求，为POST请求
 	req, err := http.NewRequest("POST", "https://api.interpreter.caiyunai.com/v1/dict", data)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	// 设置请求头
 	req.Header.Set("Accept", "application/json, text/plain, */*")
 	req.Header.Set("Accept-Language", "en,zh;q=0.9,zh-CN;q=0.8")
 	req.Header.Set("Connection", "keep-alive")
@@ -86,11 +80,7 @@ func queryCaiyun(word string) {
 	req.Header.Set("sec-ch-ua", `" Not A;Brand";v="99", "Chromium";v="101", "Google Chrome";v="101"`)
 	req.Header.Set("sec-ch-ua-mobile", "?0")
 	req.Header.Set("sec-ch-ua-platform", `"Windows"`)
-
-	// 发起请求
 	resp, err := client.Do(req)
-
-	// 读取流
 	bodyText, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatal(err)
@@ -104,8 +94,6 @@ func queryCaiyun(word string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	// 输出结果
 	fmt.Println("单词:", word)
 	fmt.Println("读音: UK:", dictResponse.Dictionary.Prons.En, "US:", dictResponse.Dictionary.Prons.EnUs)
 }
@@ -163,7 +151,6 @@ func queryHuoshan(word string) {
 
 func main() {
 
-	// 读取输入并提示信息
 	if len(os.Args) != 2 {
 		_, _ = fmt.Fprintf(os.Stderr, `usage: dict WORD
 example: go run main.go good

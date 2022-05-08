@@ -8,75 +8,44 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 )
 
+// DictRequest 彩云翻译request
 type DictRequest struct {
 	TransType string `json:"trans_type"`
 	Source    string `json:"source"`
-	UserID    string `json:"user_id"`
 }
 
+// DictResponse 彩云翻译response
 type DictResponse struct {
-	Rc   int `json:"rc"`
-	Wiki struct {
-		KnownInLaguages int `json:"known_in_laguages"`
-		Description     struct {
-			Source string      `json:"source"`
-			Target interface{} `json:"target"`
-		} `json:"description"`
-		ID   string `json:"id"`
-		Item struct {
-			Source string `json:"source"`
-			Target string `json:"target"`
-		} `json:"item"`
-		ImageURL  string `json:"image_url"`
-		IsSubject string `json:"is_subject"`
-		Sitelink  string `json:"sitelink"`
-	} `json:"wiki"`
 	Dictionary struct {
 		Prons struct {
 			EnUs string `json:"en-us"`
 			En   string `json:"en"`
 		} `json:"prons"`
-		Explanations []string      `json:"explanations"`
-		Synonym      []string      `json:"synonym"`
-		Antonym      []string      `json:"antonym"`
-		WqxExample   [][]string    `json:"wqx_example"`
-		Entry        string        `json:"entry"`
-		Type         string        `json:"type"`
-		Related      []interface{} `json:"related"`
-		Source       string        `json:"source"`
+		Explanations []string `json:"explanations"`
 	} `json:"dictionary"`
 }
 
-func main() {
-	if len(os.Args) != 2 {
-		fmt.Fprintf(os.Stderr, `usage: dict WORD
-example: go run main.go good
-`)
-		os.Exit(1)
-	}
-	word := os.Args[1]
-	tik := time.Now()
-	query(word)
-	tok := time.Since(tik)
-	fmt.Println("用时:", tok)
-}
-
+// 彩云翻译
 func query(word string) {
+
+	// 创建HTTP client和body流
 	client := &http.Client{}
-	// var data = strings.NewReader(`{"trans_type":"en2zh","source":"good"}`)
 	request := DictRequest{TransType: "en2zh", Source: word}
 	buf, err := json.Marshal(request)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// 创建HTTP请求，为POST请求
 	var data = bytes.NewReader(buf)
 	req, err := http.NewRequest("POST", "https://api.interpreter.caiyunai.com/v1/dict", data)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// 设置请求头
 	req.Header.Set("Accept", "application/json, text/plain, */*")
 	req.Header.Set("Accept-Language", "en,zh;q=0.9,zh-CN;q=0.8")
 	req.Header.Set("Connection", "keep-alive")
@@ -93,11 +62,16 @@ func query(word string) {
 	req.Header.Set("sec-ch-ua", `" Not A;Brand";v="99", "Chromium";v="101", "Google Chrome";v="101"`)
 	req.Header.Set("sec-ch-ua-mobile", "?0")
 	req.Header.Set("sec-ch-ua-platform", `"Windows"`)
+
+	// 发起请求
 	resp, err := client.Do(req)
+
+	// 读取流
 	bodyText, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	if resp.StatusCode != 200 {
 		log.Fatal("Bad StatusCode:", resp.StatusCode, "body", string(bodyText))
 	}
@@ -106,9 +80,29 @@ func query(word string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// 输出结果
 	fmt.Println(word)
 	fmt.Println("UK:", dictResponse.Dictionary.Prons.En, "US:", dictResponse.Dictionary.Prons.EnUs)
 	for _, item := range dictResponse.Dictionary.Explanations {
 		fmt.Println(item)
 	}
+}
+
+func main() {
+
+	// 读取输入并提示信息
+	if len(os.Args) != 2 {
+		_, err := fmt.Fprintf(os.Stderr, `usage: dict WORD
+example: go run main.go good
+`)
+		if err != nil {
+			fmt.Println(err)
+		}
+		os.Exit(1)
+	}
+	word := os.Args[1]
+
+	// 查询
+	query(word)
 }
