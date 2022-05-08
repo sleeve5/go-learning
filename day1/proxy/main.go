@@ -30,6 +30,7 @@ func main() {
 }
 
 func auth(reader *bufio.Reader, conn net.Conn) (err error) {
+
 	// +-----+---------+----------+
 	// | VER | NMETHOD |  METHOD  |
 	// +-----+---------+----------+
@@ -38,6 +39,7 @@ func auth(reader *bufio.Reader, conn net.Conn) (err error) {
 	// VER:协议版本，socks5为 0x05
 	// NMETHOD:支持认证的方法数量，为METHOD的字节数
 	// METHOD:用来指示客户端和代理服务器之间的认证方法
+
 	ver, err := reader.ReadByte()
 	if err != nil {
 		return fmt.Errorf("read ver failed:%w", err)

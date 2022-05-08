@@ -11,11 +11,11 @@ import (
 )
 
 func main() {
+
 	// 生成随机数
 	maxNum := 100
 	rand.Seed(time.Now().UnixNano())
 	result := rand.Intn(maxNum)
-	// fmt.Printf("The result is %v.\n", result)
 
 	// 读取用户输入
 	fmt.Println("Please input your guess:")
