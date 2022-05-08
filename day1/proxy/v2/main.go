@@ -57,6 +57,12 @@ func auth(reader *bufio.Reader, conn net.Conn) (err error) {
 		return fmt.Errorf("read method failed:%w", err)
 	}
 	log.Println("ver", ver, "method", method)
+	// +----+--------+
+	// |VER | METHOD |
+	// +----+--------+
+	// | 1  |   1    |
+	// +----+--------+
+
 	_, err = conn.Write([]byte{socks5VER, 0x00})
 	if err != nil {
 		return fmt.Errorf("write failed:%w", err)
