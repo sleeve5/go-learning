@@ -9,10 +9,6 @@ import (
 )
 
 const socks5VER = 0x05
-const cmdBind = 0x01
-const atypeIPV4 = 0x01
-const atypeHOST = 0x03
-const atypeIPV6 = 0x04
 
 func main() {
 	server, err := net.Listen("tcp", "127.0.0.1:1080")
